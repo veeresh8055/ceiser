@@ -1,0 +1,5 @@
+# Ignore dependency installs in any service folder.
+**/node_modules/
+
+# Ignore environment files in any service folder.
+**/.env
