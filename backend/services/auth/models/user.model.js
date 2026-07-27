@@ -1,13 +1,13 @@
-import {Schema, model} from "mongoose";
+import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-    name:String ,
-    firebaseUid: {type:String , unique:true},
-    email: {type:String , unique:true},
+    firebaseUid: { type: String, unique: true },
+    name: String,
+    email: { type: String, unique: true },
     avatar: String,
 
 
- }, {timestamps: true});
+}, { timestamps: true });
 
 const User = model("User", userSchema);
 

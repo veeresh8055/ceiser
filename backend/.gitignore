@@ -3,3 +3,6 @@
 
 # Ignore environment files in any service folder.
 **/.env
+
+# Firebase Admin credentials must remain local and never be committed.
+services/auth/serviceAccountKey.json
