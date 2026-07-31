@@ -19,7 +19,7 @@ export const login = async (req, res) => {
         }
         const sessionId = crypto.randomUUID();
            
-        await redis.set(`session:-${sessionId}`, JSON.stringify({userId : user._id , name : user.name  , email:user.email , avatar : user.avatar }), 'EX', 7 * 24 * 60 * 60); // Store session for 7 days
+        await redis.set(`session-${sessionId}`, JSON.stringify({userId : user._id , name : user.name  , email:user.email , avatar : user.avatar }), 'EX', 7 * 24 * 60 * 60); // Store session for 7 days
 
 
         res.cookie("session", sessionId, { httpOnly: true, secure: false, sameSite: "strict", maxAge: 7 * 24 * 60 * 60 * 1000 });
