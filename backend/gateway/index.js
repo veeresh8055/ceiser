@@ -1,30 +1,31 @@
-import express from "express";
-import dotenv from "dotenv";
-import proxy from "express-http-proxy";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import protect from "./middlewares/auth.middleware.js";
-import getCurrentUser from "./controllers/user.controller.js";
-dotenv.config();
+import express from "express"
+import dotenv from "dotenv"
+import proxy from "express-http-proxy"
+dotenv.config()
+import cors from "cors"
+import cookieParser from "cookie-parser"
+import { getCurrentUser } from "./controllers/user.controller.js"
+import protect from "./middleware/auth.middleware.js"
+import { proxyWithHeader } from "./utils/proxyWithHeader.js"
+import morgan from "morgan"
+const port =process.env.PORT
 
-const app = express();
+const app=express()
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}));
-app.use(cookieParser());
-const PORT = process.env.PORT || 3000;
+    origin:process.env.FRONTEND_URL,
+    credentials:true
+}))
+app.use(morgan("dev"))
+app.use(cookieParser())
+app.use("/api/auth",proxy(process.env.AUTH_SERVICE))
+app.use("/api/chat",protect,proxyWithHeader(process.env.CHAT_SERVICE))
+app.use("/api/agent",protect,proxyWithHeader(process.env.AGENT_SERVICE))
+app.use("/api/billing",protect,proxyWithHeader(process.env.BILLING_SERVICE))
+app.get("/api/me",protect,getCurrentUser)
+app.get("/",(req,res)=>{
+    res.json({message:"hello from gateway v5"})
+})
 
-// Express removes the mount path before proxying, so add it back for the auth service.
-app.use("/api/auth", proxy(process.env.AUTH_SERVICE, {
-  proxyReqPathResolver: (req) => `/auth${req.url}`,
-}));
-
-app.get('/api/me' , protect , getCurrentUser )
-app.get("/", (req, res) => {
-  res.send("Gateway is running");
-} );
-
-app.listen(PORT, () => {
-  console.log(`Gateway is running on port ${PORT}`);
-});
+app.listen(port,()=>{
+    console.log(`gateway started at ${port}`)
+})
