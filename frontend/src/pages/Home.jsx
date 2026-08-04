@@ -1,5 +1,5 @@
 import { signInWithPopup } from 'firebase/auth'
-import React from 'react'
+import React, { useState } from 'react'
 import { auth, googleProvider } from '../../utils/firebase'
 import api from '../../utils/axios'
 import { FcGoogle } from "react-icons/fc";
@@ -12,22 +12,30 @@ import Artifact from '../components/Artifact';
 function Home() {
     const {userData}=useSelector(state=>state.user)
     const dispatch=useDispatch()
+    const [loginError, setLoginError] = useState('')
     const handleLogin = async (token) => {
         try {
             const { data } = await api.post("/api/auth/login", { token })
             dispatch(setUserdata(data))
+            setLoginError('')
         } catch (error) {
-            console.log(error)
+            const message = error.response?.data?.message || error.message || 'Login request failed.'
+            console.error('Auth API login failed:', error.response?.status, message)
+            setLoginError(message)
         }
     }
 
 
     const googleLogin = async () => {
-        const data = await signInWithPopup(auth, googleProvider)
-        const token = await data.user.getIdToken()
-        console.log(token)
-        await handleLogin(token)
-        console.log(data)
+        setLoginError('')
+        try {
+            const data = await signInWithPopup(auth, googleProvider)
+            const token = await data.user.getIdToken()
+            await handleLogin(token)
+        } catch (error) {
+            console.error('Google sign-in failed:', error)
+            setLoginError(error.message || 'Google sign-in failed.')
+        }
     }
     return (
         <div className='h-screen  flex bg-[#0d0f14] text-white overflow-hidden'>
@@ -50,6 +58,7 @@ function Home() {
                         <FcGoogle size={15} />
                         Continue With Google
                     </button>
+                    {loginError && <p className='text-xs text-red-400 break-words'>{loginError}</p>}
                 </div>
             </div>}
           
