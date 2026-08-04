@@ -9,10 +9,19 @@ import { proxyWithHeader } from "./utils/proxyWithHeader.js"
 import morgan from "morgan"
 const port =process.env.PORT
 const frontendOrigin = process.env.FRONTEND_URL?.trim().replace(/^['"]|['"]$/g, "")
+const allowedOrigins = new Set([
+    frontendOrigin,
+    "http://localhost:5173",
+].filter(Boolean))
 
 const app=express()
 app.use(cors({
-    origin:frontendOrigin,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.has(origin)) {
+            return callback(null, true)
+        }
+        return callback(new Error(`CORS origin is not allowed: ${origin}`))
+    },
     credentials:true
 }))
 app.use(morgan("dev"))
