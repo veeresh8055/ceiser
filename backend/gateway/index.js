@@ -8,10 +8,11 @@ import protect from "./middlewares/auth.middleware.js"
 import { proxyWithHeader } from "./utils/proxyWithHeader.js"
 import morgan from "morgan"
 const port =process.env.PORT
+const frontendOrigin = process.env.FRONTEND_URL?.trim().replace(/^['"]|['"]$/g, "")
 
 const app=express()
 app.use(cors({
-    origin:process.env.FRONTEND_URL,
+    origin:frontendOrigin,
     credentials:true
 }))
 app.use(morgan("dev"))

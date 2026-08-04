@@ -6,8 +6,11 @@ async function sendMessage(payload) {
     const {data}=await api.post("/api/agent/chat",payload)
     return data
  } catch (error) {
-    console.log(error)
-    return null
+    console.error('AI request failed:', error.response?.data || error.message)
+    return {
+      error: true,
+      message: error.response?.data?.message || 'The AI service is temporarily unavailable.'
+    }
  }
 }
 

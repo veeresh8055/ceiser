@@ -39,7 +39,7 @@ export const login = async (req, res) => {
 
 
 
-        const isProduction = process.env.NODE_ENV === "production"
+        const isProduction = process.env.NODE_ENV === "production" || process.env.RENDER === "true"
         res.cookie("session", sessionId, {
             httpOnly: true,
             secure: isProduction,
