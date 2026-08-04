@@ -7,11 +7,12 @@ import { getAuth, GoogleAuthProvider} from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "cortexai-172f9.firebaseapp.com",
-  projectId: "cortexai-172f9",
-  storageBucket: "cortexai-172f9.firebasestorage.app",
-  messagingSenderId: "428104212065",
-  appId: "1:428104212065:web:7948e58a8bb47cda0d1420"
+    authDomain: "ceiserai.firebaseapp.com",
+  projectId: "ceiserai",
+  storageBucket: "ceiserai.firebasestorage.app",
+  messagingSenderId: "375392690639",
+  appId: "1:375392690639:web:4c574563643377a75432ba",
+  measurementId: "G-LRGZ7ES1WJ"
 };
 
 // Initialize Firebase
